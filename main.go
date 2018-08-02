@@ -50,7 +50,9 @@ func scrapeGoogle() string {
 	})
 
 	co.OnScraped(func(r *colly.Response) {
-		result += fmt.Sprintf("Finished: %s", gettime(time.Now().Unix()))
+		t := time.Now()
+		result += fmt.Sprintf("Finished: %s<br>\n%d-%02d-%02dT%02d:%02d:%02d\n",
+			gettime(t.Unix()), t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 	})
 
 	co.Visit("https://www.google.com/search?q=mace+windu")
