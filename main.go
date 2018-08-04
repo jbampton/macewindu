@@ -26,6 +26,28 @@ func main() {
 			"results": template.HTML(scrapeGoogle()),
 		})
 	})
+
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+
+	router.GET("/the/real/:name", func(c *gin.Context) {
+		name := c.Param("name")
+		c.String(http.StatusOK, "Hello %s", name)
+	})
+
+	// Query string parameters are parsed using the existing underlying request object.
+	// The request responds to a url matching:  /welcome?firstname=Jane&lastname=Doe
+	router.GET("/welcome", func(c *gin.Context) {
+		firstname := c.DefaultQuery("firstname", "Guest")
+		lastname := c.Query("lastname")
+
+		c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
+	})
+
+
 	router.Run(":" + port)
 }
 
