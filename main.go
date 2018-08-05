@@ -51,6 +51,9 @@ func main() {
 	router.GET("/google-charts", func(c *gin.Context) {
 		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 
+		offsetNumber := r.Intn(7)
+		offsetAmount := 0.2
+
 		c.HTML(http.StatusOK, "charts.tmpl.html", map[string]interface{}{
 			"pie_cool": r.Intn(50),
 			"pie_battles": r.Intn(50),
@@ -59,6 +62,8 @@ func main() {
 			"pie_eat": r.Intn(50),
 			"pie_commute": r.Intn(50),
 			"pie_tv": r.Intn(50),
+			"offset_number": offsetNumber,
+			"offset_amount": offsetAmount,
 		})
 	})
 

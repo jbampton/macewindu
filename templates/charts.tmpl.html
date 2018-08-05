@@ -43,14 +43,15 @@
             ]);
 
             var options = {
-                title: 'Mace\'s Daily Activities'
+                chartArea:{left:10},
+                is3D: true,
+                title: 'Mace\'s Daily Activities',
+                slices: { {{.offset_number}}: {offset: {{.offset_amount}} } }
             };
 
             var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
             chart.draw(data, options);
         }
     </script>
-
   </body>
 </html>
