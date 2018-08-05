@@ -47,6 +47,9 @@ func main() {
 		c.String(http.StatusOK, "Hello %s %s", firstname, lastname)
 	})
 
+	router.GET("/google-charts", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "charts.tmpl.html", nil)
+	})
 
 	router.Run(":" + port)
 }
