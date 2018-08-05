@@ -10,6 +10,7 @@ import (
 	"github.com/gocolly/colly"
 	"time"
 	"fmt"
+	"math/rand"
 )
 
 func main() {
@@ -48,7 +49,17 @@ func main() {
 	})
 
 	router.GET("/google-charts", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "charts.tmpl.html", nil)
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
+		c.HTML(http.StatusOK, "charts.tmpl.html", map[string]interface{}{
+			"pie_cool": r.Intn(50),
+			"pie_battles": r.Intn(50),
+			"pie_sleep": r.Intn(50),
+			"pie_council": r.Intn(50),
+			"pie_eat": r.Intn(50),
+			"pie_commute": r.Intn(50),
+			"pie_tv": r.Intn(50),
+		})
 	})
 
 	router.Run(":" + port)

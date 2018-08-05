@@ -15,12 +15,12 @@
         <meta property="og:site_name" content="Mace Windu">
         <meta property="og:title" content="Mace Windu champion of the Jedi Order">
         <meta property="og:type" content="website">
-        <meta property="og:url" content="https://macewindu.herokuapp.com">
+        <meta property="og:url" content="https://macewindu.herokuapp.com/google-charts">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/static/charts.css">
     </head>
   <body>
-    <h1>A Mace Windu based Google Pie Chart.</h1>
+    <h1>A Mace Windu based Google Pie Chart</h1>
 
     <div id="piechart" style="width: 900px; height: 500px;"></div>
 
@@ -33,13 +33,13 @@
 
             var data = google.visualization.arrayToDataTable([
                 ['Task', 'Hours per Day'],
-                ['Look Ice Cool', 25],
-                ['Lightsaber Battles',     11],
-                ['Sleep',    7],
-                ['Jedi Council Tasks', 4],
-                ['Eat',      2],
-                ['Commute',  2],
-                ['Watch TV', 2]
+                ['Look Ice Cool', {{ .pie_cool }}],
+                ['Lightsaber Battles', {{ .pie_battles }}],
+                ['Sleep', {{ .pie_sleep }}],
+                ['Jedi Council Tasks', {{ .pie_council }}],
+                ['Eat', {{ .pie_eat }}],
+                ['Commute',  {{ .pie_commute }}],
+                ['Watch TV', {{ .pie_tv }}]
             ]);
 
             var options = {
