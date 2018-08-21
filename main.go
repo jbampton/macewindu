@@ -6,14 +6,21 @@ import (
 	"os"
 	"github.com/gin-gonic/gin"
 	_ "github.com/heroku/x/hmetrics/onload"
-	"html/template"
 	"github.com/gocolly/colly"
 	"time"
 	"fmt"
 	"math/rand"
 )
 
+type ScrappedData struct {
+	Data [][]string
+	Address string
+	Time string
+	RegTime string
+}
+
 func main() {
+	fmt.Println("Starting...")
 	port := os.Getenv("PORT")
 	if port == "" {
 		log.Fatal("$PORT must be set")
@@ -22,10 +29,9 @@ func main() {
 	router.Use(gin.Logger())
 	router.LoadHTMLGlob("templates/*.tmpl.html")
 	router.Static("/static", "static")
+	d := scrapeGoogle()
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", map[string]interface{}{
-			"results": template.HTML(scrapeGoogle()),
-		})
+		c.HTML(http.StatusOK, "index.tmpl.html", d)
 	})
 
 	router.GET("/ping", func(c *gin.Context) {
@@ -70,36 +76,43 @@ func main() {
 	router.Run(":" + port)
 }
 
-func scrapeGoogle() string {
-	startTime := gettime(time.Now().Unix())
-	result := ""
+func scrapeGoogle() ScrappedData {
 	google := "www.google.com"
+	var url string
+	var unixTime string
+	var regTime string
+
 	co := colly.NewCollector(
 		colly.AllowedDomains(google),
 		//colly.CacheDir("./macewindu_cache"),
 	)
 	co.OnRequest(func(r *colly.Request) {
-		result += startTime + fmt.Sprintf("Visiting: <a href=\"%s\" target=\"_blank\" rel=\"noreferrer\">%s</a><br><br>\n", r.URL, r.URL)
+		url = fmt.Sprintf("%v", r.URL)
 	})
-
+	var ret [][]string
 	// Find all links
 	co.OnHTML("a[href^='/url?q']", func(e *colly.HTMLElement) {
 		if len(e.Text) > 0 && e.Text != "Cached"  { // fix ??
-			result += "<a href=\"" + "https://" + google + e.Attr("href") +
-				"\" target=\"_blank\" rel=\"noreferrer\">" + e.Text + "</a><br>\n"
+			var record = make([]string, 2)
+			record[0] = e.Text
+			link := e.Attr("href")
+			record[1] = e.Request.AbsoluteURL(link)
+			ret = append(ret, record)
 		}
 	})
 
 	co.OnScraped(func(r *colly.Response) {
 		t := time.Now()
-		result += fmt.Sprintf("Finished: %s<br>\n%d-%02d-%02dT%02d:%02d:%02d\n",
-			gettime(t.Unix()), t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
+		unixTime = fmt.Sprintf("%s",gettime(t.Unix()))
+		regTime = fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d\n",
+			t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 	})
 
 	co.Visit("https://www.google.com/search?q=mace+windu")
-	return result
+	d := ScrappedData{Data: ret, Address: url, Time: unixTime, RegTime: regTime}
+	return d
 }
 
 func gettime(i int64) string {
-	return fmt.Sprintf("Current Unix Time: %v<br>", i)
+	return fmt.Sprintf("%v", i)
 }

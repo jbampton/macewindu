@@ -33,7 +33,13 @@
     <h1>Mace Windu</h1>
     <img alt="Mace Windu" src="/static/images/macewindu.jpg">
     <div>
-        {{ .results }}
+      Visiting: <a href="{{.Address}}" target="_blank" rel="noreferrer">{{ .Address }}</a><br><br>
+      {{range .Data}}    
+        <a href="{{index . 1}}">{{index . 0}}</a><br/>
+      {{end}}
+      Finished: Current Unix Time {{ .Time }}<br/>
+      {{ .RegTime }}
+      
     </div>
   </body>
 </html>
