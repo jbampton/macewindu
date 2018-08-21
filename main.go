@@ -15,6 +15,7 @@ import (
 type ScrappedData struct {
 	Data [][]string
 	Address string
+	StartTime string
 	Time string
 	RegTime string
 }
@@ -77,10 +78,13 @@ func main() {
 }
 
 func scrapeGoogle() ScrappedData {
-	google := "www.google.com"
 	var url string
+	var startTime string
 	var unixTime string
 	var regTime string
+
+	startTime = gettime(time.Now().Unix())
+	google := "www.google.com"
 
 	co := colly.NewCollector(
 		colly.AllowedDomains(google),
@@ -109,7 +113,7 @@ func scrapeGoogle() ScrappedData {
 	})
 
 	co.Visit("https://www.google.com/search?q=mace+windu")
-	d := ScrappedData{Data: ret, Address: url, Time: unixTime, RegTime: regTime}
+	d := ScrappedData{Data: ret, Address: url, StartTime: startTime, Time: unixTime, RegTime: regTime}
 	return d
 }
 

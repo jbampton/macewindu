@@ -33,10 +33,11 @@
     <h1>Mace Windu</h1>
     <img alt="Mace Windu" src="/static/images/macewindu.jpg">
     <div>
+      Starting: Current Unix Time {{ .StartTime }}<br>
       Visiting: <a href="{{.Address}}" target="_blank" rel="noreferrer">{{ .Address }}</a><br><br>
       {{range .Data}}    
-        <a href="{{index . 1}}">{{index . 0}}</a><br/>
-      {{end}}
+        <a href="{{index . 1}}" target="_blank" rel="noreferrer">{{index . 0}}</a><br/>
+      {{end}}<br>
       Finished: Current Unix Time {{ .Time }}<br/>
       {{ .RegTime }}
       
