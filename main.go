@@ -25,7 +25,7 @@ func main() {
 	fmt.Println("Starting...")
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "8080"
+		port = "9000"
 		//log.Fatal("$PORT must be set")
 	}
 	router := gin.New()
