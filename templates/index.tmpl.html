@@ -29,18 +29,79 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="/static/main.css" />
     </head>
-  <body>
-    <h1>Mace Windu</h1>
-    <img alt="Mace Windu" src="/static/images/macewindu.jpg">
-    <div>
-      Starting: Current Unix Time {{ .StartTime }}<br>
-      Visiting: <a href="{{.Address}}" target="_blank" rel="noreferrer">{{ .Address }}</a><br><br>
-      {{range .Data}}    
-        <a href="{{index . 1}}" target="_blank" rel="noreferrer">{{index . 0}}</a><br/>
-      {{end}}<br>
-      Finished: Current Unix Time {{ .Time }}<br/>
-      {{ .RegTime }}
-      
-    </div>
+    <body>
+      <div>
+        <h1>Mace Windu</h1>
+        <img alt="Mace Windu" src="/static/images/macewindu.jpg">
+        <div id="piechart"></div>
+        <div>
+          Starting: Current Unix Time {{ .StartTime }}<br>
+          Visiting: <a href="{{.Address}}" target="_blank" rel="noreferrer">{{ .Address }}</a><br><br>
+          {{range .Data}}
+            <a href="{{index . 1}}" target="_blank" rel="noreferrer">{{index . 0}}</a><br/>
+          {{end}}<br>
+          Finished: Current Unix Time {{ .Time }}<br/>
+          {{ .RegTime }}
+
+        </div>
+      </div>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+            let array = [];
+            for(let i=0;i<7;i++){
+                array.push(Math.floor(Math.random()*50));
+            }
+            var data = google.visualization.arrayToDataTable([
+                ['Task', 'Hours per Day'],
+                ['Look Ice Cool', array[0]],
+                ['Lightsaber Battles', array[1]],
+                ['Sleep', array[2]],
+                ['Jedi Council Tasks', array[3]],
+                ['Eat', array[4]],
+                ['Commute', array[5]],
+                ['Watch TV', array[6]]
+            ]);
+            var day = "";
+            var d = Math.floor(Math.random()*7);
+            switch (d) {
+                case 0:
+                    day = "Monday";
+                    break;
+                case 1:
+                    day = "Tuesday";
+                    break;
+                case 2:
+                    day = "Wednesday";
+                    break;
+                case 3:
+                    day = "Thursday";
+                    break;
+                case 4:
+                    day = "Friday";
+                    break;
+                case 5:
+                    day = "Saturday";
+                    break;
+                default:
+                    day = "Sunday";
+            }
+            var options = {
+                'title': 'Mace\'s ' + day + ' Activities',
+                'backgroundColor': '#F0F3F4',
+                'is3D': true,
+                'width': 550,
+                'height': 550,
+                'chartArea': {'width': '75%', 'height': '80%'},
+            };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+            setTimeout(drawChart, 5000);
+        }
+        </script>
   </body>
 </html>

@@ -1,15 +1,14 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/gocolly/colly"
+	_ "github.com/heroku/x/hmetrics/onload"
+	"math/rand"
 	"net/http"
 	"os"
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
-	"github.com/gocolly/colly"
 	"time"
-	"fmt"
-	"math/rand"
 )
 
 type ScrappedData struct {
@@ -24,7 +23,8 @@ func main() {
 	fmt.Println("Starting...")
 	port := os.Getenv("PORT")
 	if port == "" {
-		log.Fatal("$PORT must be set")
+		port = "8080"
+		//log.Fatal("$PORT must be set")
 	}
 	router := gin.New()
 	router.Use(gin.Logger())
