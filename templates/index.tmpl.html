@@ -36,9 +36,9 @@
         <div id="piechart"></div>
         <div>
           Starting: Current Unix Time {{ .StartTime }}<br>
-          Visiting: <a href="{{.Address}}" target="_blank" rel="noreferrer">{{ .Address }}</a><br><br>
+          Visiting: <a href="{{.Address}}" target="_blank" rel="noopener noreferrer">{{ .Address }}</a><br><br>
           {{range .Data}}
-            <a href="{{index . 1}}" target="_blank" rel="noreferrer">{{index . 0}}</a><br/>
+            <a href="{{index . 1}}" target="_blank" rel="noopener noreferrer">{{index . 0}}</a><br/>
           {{end}}<br>
           Finished: Current Unix Time {{ .Time }}<br/>
           {{ .RegTime }}
