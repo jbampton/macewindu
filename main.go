@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -17,6 +18,7 @@ type ScrappedData struct {
 	StartTime string
 	Time string
 	RegTime string
+	Colors string
 }
 
 func main() {
@@ -30,8 +32,9 @@ func main() {
 	router.Use(gin.Logger())
 	router.LoadHTMLGlob("templates/*.tmpl.html")
 	router.Static("/static", "static")
-	d := scrapeGoogle()
+
 	router.GET("/", func(c *gin.Context) {
+		d := scrapeGoogle()
 		c.HTML(http.StatusOK, "index.tmpl.html", d)
 	})
 
@@ -111,9 +114,17 @@ func scrapeGoogle() ScrappedData {
 		regTime = fmt.Sprintf("%d-%02d-%02dT%02d:%02d:%02d\n",
 			t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second())
 	})
+	// randomize color array
+	col := [10]string{"#641E16", "#85C1E9", "#512E5F", "#154360", "#85C1E9", "#0E6251", "#145A32", "#7D6608", "#784212", "#85C1E9"}
+	dest := make([]string, len(col))
+	perm := rand.Perm(len(col))
+	for i, v := range perm {
+		dest[v] = col[i]
+	}
+	colors := strings.Join(dest,",")
 
 	co.Visit("https://www.google.com/search?q=mace+windu")
-	d := ScrappedData{Data: ret, Address: url, StartTime: startTime, Time: unixTime, RegTime: regTime}
+	d := ScrappedData{Data: ret, Address: url, StartTime: startTime, Time: unixTime, RegTime: regTime, Colors: colors}
 	return d
 }
 
